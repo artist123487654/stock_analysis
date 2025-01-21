@@ -94,12 +94,12 @@ class KLineFormDecision(object):
         resList = []
         for i in range(0, analysis_days):
             line_lst = list(df.iloc[i])
-            date, open, high, close, low = line_lst[0:5]
+            date, open, high,low, close = line_lst[3:8]   #改过了
             day = [open, high, close, low]
             res_code_list = StockKLineFormChecker().checkSingleKLineForm(date, day)
             if not res_code_list:
                 continue
-            resList.append([date, res_code_list])
+            resList.append([str(date), res_code_list])
         return resList
 
     # 两日组合形态
@@ -109,7 +109,7 @@ class KLineFormDecision(object):
         for i in range(0, analysis_days - 1):
             dayOne = list(df.iloc[i + 1])
             dayTwo = list(df.iloc[i])
-            date = dayOne[0]
+            date = str(dayOne[3])
             res_code_list = StockKLineFormChecker().checkDoubleKLineForm(date, dayOne, dayTwo)
             if not res_code_list:
                 continue
@@ -124,7 +124,7 @@ class KLineFormDecision(object):
             dayOne = list(df.iloc[i + 2])
             dayTwo = list(df.iloc[i + 1])
             dayThree = list(df.iloc[i])
-            date = dayTwo[0]
+            date =str(dayTwo[3])
             res_code_list = StockKLineFormChecker().checkMultipleKLineForm(date, dayOne, dayTwo, dayThree)
             if not res_code_list:
                 continue

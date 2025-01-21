@@ -1,9 +1,12 @@
 import tushare as ts
-from auxiliary_lib.NounsEng2Chn import NounsEng2Chn
-from auxiliary_lib.ConfigLoader import ConfigLoader
-import auxiliary_lib.util as util
-from src.decision_department.StockAnalyst import StockAnalyst
+from IPython.core.ultratb import nullrepr
+
+from technology.auxiliary_lib.NounsEng2Chn import NounsEng2Chn
+from technology.auxiliary_lib.ConfigLoader import ConfigLoader
+import technology.auxiliary_lib.util as util
+from technology.src.decision_department.StockAnalyst import StockAnalyst
 import time
+import pandas as pd
 
 
 class StockDatasManager:
@@ -24,9 +27,9 @@ class StockDatasManager:
     '''
 
     def getAllStockInfo(self):
-        df_StockInfo = ts.get_stock_basics()
+        df_StockInfo = ts.get_stock_basics()    #获取基本股票数据
         df_StockInfo = df_StockInfo.reset_index()
-        df_StockInfo = NounsEng2Chn().converseEng2Chn(df_StockInfo, NounsEng2Chn.mDataCompanyBasicInfo)
+        df_StockInfo = NounsEng2Chn().converseEng2Chn(df_StockInfo, NounsEng2Chn.mDataCompanyBasicInfo)   #中英文转化
         df_StockInfo.to_excel("../datas/股票数据/当前上市交易的股票列表.xlsx", sheet_name='股票列表', index=False)
 
     '''
@@ -34,13 +37,18 @@ class StockDatasManager:
     '''
 
     def getAllStockInfoPro(self):
-        field = "ts_code,symbol,name,area,industry,market,list_date,list_status,exchange,fullname,enname,curr_type"
-        df_StockInfo = self.__pro.stock_basic(list_status='L', fields=field)
+        # field = "ts_code,symbol,name,area,industry,market,list_date,list_status,exchange,fullname,enname,curr_type"
+        # df_StockInfo = self.__pro.stock_basic(list_status='L', fields=field)
+        # df_StockInfo = df_StockInfo.reset_index()
+        # df_StockInfo = NounsEng2Chn().converseEng2Chn(df_StockInfo, NounsEng2Chn.mDataAllStockBasicInfo)
+        # NounsEng2Chn().converseStockCode2Chn(df_StockInfo)
+        # df_StockInfo.to_excel("../datas/A_当前上市交易的股票列表.xlsx", sheet_name='股票列表', index=False)
+        # __stock_code_list = list(df_StockInfo["code"])
+        df_StockInfo = pd.read_excel("../datas/A_当前上市交易的股票列表.xlsx", sheet_name='股票列表')
         df_StockInfo = df_StockInfo.reset_index()
         df_StockInfo = NounsEng2Chn().converseEng2Chn(df_StockInfo, NounsEng2Chn.mDataAllStockBasicInfo)
+        df_StockInfo['股票代码'] = df_StockInfo['股票代码'].apply(lambda x: str(x).zfill(6))  #变为标准式子
         NounsEng2Chn().converseStockCode2Chn(df_StockInfo)
-        df_StockInfo.to_excel("../datas/A_当前上市交易的股票列表.xlsx", sheet_name='股票列表', index=False)
-        # __stock_code_list = list(df_StockInfo["code"])
         for i in range(0, len(df_StockInfo)):
             df_line = df_StockInfo.iloc[i]
             name = df_line["股票名称"]
@@ -60,7 +68,7 @@ class StockDatasManager:
         code_list_cfg = ConfigLoader().get("stocks", "code_list")
 
         startDate = ConfigLoader().get("stocks", "history_data_start_date")
-        endDate = ConfigLoader().get("stocks", "history_data_end_date")
+        endDate = ConfigLoader().get("stocks", "history_data_end_date")   #自己在configloader调节
         now = time.time()
         today = time.strftime("%Y-%m-%d", time.localtime(now))
         if endDate == '-1' or endDate >= today:
@@ -81,10 +89,21 @@ class StockDatasManager:
 
         for code, name in self.__stock_code_map.items():
             count += 1
-            if code_list_cfg and code not in code_list_cfg:
+            #筛选符合的股票
+            if code_list_cfg and str(code) not in code_list_cfg:
                 continue
-
-            df_SpecStockHistory = ts.get_hist_data(code, start=startDate, end=endDate)
+            #获取当前股票的历史日K数据
+            #df_SpecStockHistory = ts.get_hist_data(code, start=startDate, end=endDate)  #过时了
+            startDatef = startDate.replace("-", "")
+            endDatef = endDate.replace("-", "")
+            codee=code
+            if code[0]=='0':
+                codee+='.SZ'
+            elif code[0]=='6':
+                codee += '.SH'
+            else:
+                codee += '.BJ'
+            df_SpecStockHistory = self.__pro.daily(ts_code=codee, start_date=startDatef, end_date=endDatef)
             if df_SpecStockHistory is None:
                 print("None: ", code)
                 continue

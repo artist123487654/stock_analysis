@@ -136,7 +136,7 @@ def twoDayAnalysisIndicators(df: DataFrame):
     for i in range(0, len(df)-1):
         dayOne = list(df.iloc[i + 1])
         dayTwo = list(df.iloc[i])
-        date = dayOne[0]
+        date = dayOne[3]
         resResult += StockKLineFormChecker().checkDoubleKLineForm(date, dayOne, dayTwo)
     return resResult
 
@@ -147,7 +147,7 @@ def threeDayAnalysisIndicators(df: DataFrame):
         dayOne = list(df.iloc[i + 2])
         dayTwo = list(df.iloc[i + 1])
         dayThree = list(df.iloc[i])
-        date = dayTwo[0]
+        date = dayTwo[3]
         resResult += StockKLineFormChecker().checkMultipleKLineForm(date, dayOne, dayTwo, dayThree)
     return resResult
 

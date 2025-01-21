@@ -1,9 +1,9 @@
 import tushare as ts
 import os
-from src.StockIndexDatasManager import StockIndexDatasManager
-from src.StockDatasManager import StockDatasManager
-from src.decision_department.StockAnalyst import StockAnalyst
-from auxiliary_lib.ConfigLoader import ConfigLoader
+from technology.src.StockIndexDatasManager import StockIndexDatasManager
+from technology.src.StockDatasManager import StockDatasManager
+from technology.src.decision_department.StockAnalyst import StockAnalyst
+from technology.auxiliary_lib.ConfigLoader import ConfigLoader
 
 '''
     主服务入口
@@ -21,7 +21,7 @@ class StockService(object):
         return cls.__instance
 
     def __init__(self):
-        self.mPro = ts.pro_api(token='e5ccd9b1da858f2e127afef26431dd550ebd8d837f2394816722f0f9')
+        self.mPro = ts.pro_api(token='797e877a9b26ec820adc5ef5e093e83ab9b2814fbe7f458ddfa887b4')
 
     '''
         开启主服务
@@ -38,16 +38,16 @@ class StockService(object):
             files = os.listdir("../datas/股票数据")
             code_list_cfg = ConfigLoader().get("stocks", "code_list")
             code_list = code_list_cfg.split(",")
-            monitor_code_list = ConfigLoader().get("stocks", "monitor_code_list").split(",")
+            monitor_code_list = ConfigLoader().get("stocks", "monitor_code_list").split(",")  #获取需要监控的股票数据
             code_list = code_list_cfg
             print("len: ", len(code_list_cfg))
             for file in files:
                 file = file.split('.xlsx')[0]
                 code = file[0:6]
-                if code_list_cfg and code not in code_list and code not in monitor_code_list:
+                if code_list_cfg and code not in code_list and code not in monitor_code_list:  #检查获取的股票数据是否是在指定的列表中
                     continue
                 name = file[6::]
-                StockAnalyst().setCode2Name(code, name)
+                StockAnalyst().setCode2Name(code, name)  #设置code->name映射
             self.startDataAnalysis()
         else:
             print('错误的分析标识：[use_analysis_engine]')
@@ -57,7 +57,7 @@ class StockService(object):
     '''
 
     def startDataCollection(self):
-        self.getStockIndexDatas()  # 获取指数数据
+#        self.getStockIndexDatas()  # 获取指数数据
         self.getStockDatas()  # 获取股票数据
 
     '''

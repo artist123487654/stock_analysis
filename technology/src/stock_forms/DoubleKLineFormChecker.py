@@ -23,8 +23,8 @@ class DoubleKLineFormChecker(object):
 
     # 吞没形态
     def engulfingForm(self, dayOne: list, dayTwo: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
         min1, max1 = min(open1, close1), max(open1, close1)
         min2, max2 = min(open2, close2), max(open2, close2)
 
@@ -42,8 +42,8 @@ class DoubleKLineFormChecker(object):
 
     # 乌云盖顶形态
     def darkCloudCover(self, dayOne: list, dayTwo: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
         '''
             - 第一天是阳线，第二天是阴线
             - 第二日的阴线深入到阳线 1/2 以下（深入越多越好）
@@ -55,8 +55,8 @@ class DoubleKLineFormChecker(object):
 
     # 刺透形态（斩回线形态）
     def piercingForm(self, dayOne: list, dayTwo: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
         '''
             - 第二天的阳线必须向上刺透第一天阴线 1/2 以上（刺透越多越好）
         '''
@@ -67,8 +67,8 @@ class DoubleKLineFormChecker(object):
 
     # 倒锤子形态
     def invertedHammerWire(self, dayOne: list, dayTwo: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
         entity_len = abs(open1 - close1)  # K线实体
         lower_shadow_len = open1 - low1 if open1 < close1 else close1 - low1
         max1 = max(open1, close1)
@@ -85,8 +85,8 @@ class DoubleKLineFormChecker(object):
 
     # 孕线形态
     def pregnantLineForm(self, dayOne: list, dayTwo: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
         entity_len1, entity_len2 = abs(open1 - close1), abs(open2 - close2)
         min1, max1 = min(open1, close1), max(open1, close1)
         min2, max2 = min(open2, close2), max(open2, close2)
@@ -103,8 +103,8 @@ class DoubleKLineFormChecker(object):
 
     # 十字孕线形态
     def crossPregnantLineForm(self, dayOne: list, dayTwo: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
         entity_len1, entity_len2 = abs(open1 - close1), abs(open2 - close2)
         min1, max1 = min(open1, close1), max(open1, close1)
         min2, max2 = min(open2, close2), max(open2, close2)
@@ -121,8 +121,8 @@ class DoubleKLineFormChecker(object):
 
     # 平头顶部
     def flatTopForm(self, dayOne: list, dayTwo: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
         upper_shadow_len1 = high1 - open1
         upper_shadow_len2 = high2 - open2
 
@@ -143,8 +143,8 @@ class DoubleKLineFormChecker(object):
 
     # 平头底部
     def flatBottomForm(self, dayOne: list, dayTwo: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
         lower_shadow_len1 = open1 - low1 if open1 < close1 else close1 - low1
         lower_shadow_len2 = open2 - low2 if open2 < close2 else close2 - low2
 
@@ -194,7 +194,7 @@ if __name__ == '__main__':
         for i in range(0, 150):
             dayOne = list(df.iloc[i + 1])
             dayTwo = list(df.iloc[i])
-            date = dayOne[0]
+            date = dayOne[3]
             res = DoubleKLineFormChecker().flatBottomForm(dayOne, dayTwo)
             if res != -1:
                 print("====>: " + date + ": " + StockForms().get(res), end="")

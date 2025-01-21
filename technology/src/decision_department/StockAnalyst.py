@@ -10,11 +10,12 @@ from src.decision_department.MADecision import MADecision
 from src.decision_department.VolumeDecision import VolumeDecision
 from src.decision_department.KLineFormDecision import KLineFormDecision
 from src.analysis_department.Turnover import Turnover
+from technology.auxiliary_lib.NounsEng2Chn import NounsEng2Chn
+
 
 '''
     股票数据分析器
 '''
-
 
 class StockAnalyst(object):
     __root_path = "../datas/股票数据/"
@@ -70,7 +71,7 @@ class StockAnalyst(object):
             "多天决策",
             "5日均线趋势",
             "量能情况",
-            "换手率情况",
+#            "换手率情况",
             "最终决策"
         ]
         df_result = DataFrame(columns=columns)
@@ -90,6 +91,9 @@ class StockAnalyst(object):
             if not os.path.exists(self.__root_path + id + self.__stockMap[id] + '.xlsx'):
                 continue
             df = pd.read_excel(self.__root_path + id + self.__stockMap[id] + '.xlsx', sheet_name='历史日K数据', parse_dates=True)
+            df = df.reset_index()
+            df = NounsEng2Chn().converseEng2Chn(df, NounsEng2Chn.mDataSpecIndexTradingDaily)
+            print(df)
 
             # 计算分析天数
             self.setAnalysisDays(df)
@@ -103,7 +107,7 @@ class StockAnalyst(object):
             volume_situation = VolumeDecision().decision(self.__analysis_days, df)
 
             # 判定换手率情况
-            turnover_situation = Turnover().calcTurnover(self.__analysis_days, df)
+#           turnover_situation = Turnover().calcTurnover(self.__analysis_days, df)
 
             # 判定K线形态
             result_day1, result_day2, result_day3, oneDay_res, twoDay_res, threeDay_res = KLineFormDecision().decision(curveShape, self.__analysis_days, df)
@@ -129,16 +133,16 @@ class StockAnalyst(object):
                 threeDay_res, KLineFormDecision().getKLineDecisionResult(result_day3),
                 CurveDeterminer().getChnByTrendCode(curveShape),
                 CurveDeterminer().gtChnByVolumeSituation(volume_situation),
-                Turnover().getChnByKeyCode(turnover_situation),
+#                Turnover().getChnByKeyCode(turnover_situation),
                 KLineFormDecision().getKLineDecisionResult(final_result)
             ]]
 
             df_tmp = pd.DataFrame(list2Df, columns=columns)
-            df_result = df_result.append(df_tmp)
+            df_result = pd.concat([df_result, df_tmp], ignore_index=True)
 
             ## 单独保存已经购买的股票
             if id in code_list:
-                df_purchased = df_purchased.append(df_tmp)
+                df_purchased = pd.concat([df_purchased, df_tmp], ignore_index=True)
 
             ## 保存加入监控的股票
             if id in monitor_code_list:

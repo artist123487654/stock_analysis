@@ -3,7 +3,7 @@ import configparser
 
 class ConfigLoader(object):
     __instance = None
-    __config_file = "../conf/config.ini"
+    __config_file = "../conf/config_default.ini"    #confiig.ini里有关于__config[section][key]的数据 #####################
     __config = configparser.ConfigParser()
 
     def __new__(cls, *args, **kwargs):

@@ -20,9 +20,9 @@ class MultipleKLineFormChecker(object):
 
     # 启明星形态
     def venusForm(self, dayOne: list, dayTwo: list, dayThreee: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
-        open3, high3, close3, low3 = dayThreee[1:5]
+        open1,high1,low1, close1 = dayOne[4:8]
+        open2,high2, low2, close2 = dayTwo[4:8]
+        open3,high3, low3, close3  = dayThreee[4:8]
 
         '''
             - 第一天长阴线（未加“长”）
@@ -44,9 +44,9 @@ class MultipleKLineFormChecker(object):
 
     # 黄昏星形态
     def eveningStarForm(self, dayOne: list, dayTwo: list, dayThreee: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
-        open3, high3, close3, low3 = dayThreee[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
+        open3, high3, low3, close3 = dayThreee[4:8]
 
         '''
             - 第一天长阳线（未加“长”）
@@ -62,9 +62,9 @@ class MultipleKLineFormChecker(object):
 
     # 十字启明星形态
     def crossVenusForm(self, dayOne: list, dayTwo: list, dayThree: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
-        open3, high3, close3, low3 = dayThree[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
+        open3, high3, low3, close3 = dayThree[4:8]
 
         '''
             - 第二天出现十字星线
@@ -84,9 +84,9 @@ class MultipleKLineFormChecker(object):
 
     # 十字黄昏星
     def crossEveningStarForm(self, dayOne: list, dayTwo: list, dayThreee: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
-        open3, high3, close3, low3 = dayThreee[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
+        open3, high3, low3, close3 = dayThreee[4:8]
 
         '''
             - 第二天出现十字星线
@@ -102,9 +102,9 @@ class MultipleKLineFormChecker(object):
 
     # 向上跳空两只乌鸦（形态未验证）
     def gapUpTwoCrows(self, dayOne: list, dayTwo: list, dayThreee: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
-        open3, high3, close3, low3 = dayThreee[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
+        open3, high3, low3, close3 = dayThreee[4:8]
 
         if open1 < close1 and open2 > close2 and open3 > close3 \
                 and close1 < close2 \
@@ -114,9 +114,9 @@ class MultipleKLineFormChecker(object):
 
     # 三只乌鸦
     def threeCrowsForms(self, dayOne: list, dayTwo: list, dayThreee: list):
-        open1, high1, close1, low1 = dayOne[1:5]
-        open2, high2, close2, low2 = dayTwo[1:5]
-        open3, high3, close3, low3 = dayThreee[1:5]
+        open1, high1, low1, close1 = dayOne[4:8]
+        open2, high2, low2, close2 = dayTwo[4:8]
+        open3, high3, low3, close3 = dayThreee[4:8]
         upper_shadow_len1 = abs(open1 - high1)
         upper_shadow_len2 = abs(open2 - high2)
         upper_shadow_len3 = abs(open3 - high3)

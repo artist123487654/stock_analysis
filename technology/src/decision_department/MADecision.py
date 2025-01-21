@@ -17,9 +17,9 @@ class MADecision(object):
     def decision(self, analysis_days: int, df: DataFrame):
         # 倒序排列5日均价数据
         end = 7 if len(df) >= 7 and analysis_days < 7 else analysis_days
-        ma5_list = list(df['5日均价'])[0:end][::-1]
+#        ma5_list = list(df['5日均价'])[0:end][::-1]   #用不了
         close_list = list(df['收盘价'])[0:end][::-1]
-        size = len(ma5_list)
+#       size = len(ma5_list)
         # TODO
         '''
             对于短时趋势，5日均线存在延后的问题，因此暂时使用每日收盘价作为判断依据

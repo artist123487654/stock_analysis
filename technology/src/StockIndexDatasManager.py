@@ -1,6 +1,6 @@
 import pandas as pd
-import auxiliary_lib.util as util
-from auxiliary_lib.NounsEng2Chn import NounsEng2Chn
+import technology.auxiliary_lib.util as util
+from technology.auxiliary_lib.NounsEng2Chn import NounsEng2Chn
 
 '''
     获取所有的指数信息
@@ -40,6 +40,7 @@ class StockIndexDatasManager:
             for name, code in self.__index_dict.items():
                 if code != '000001.sh':  # 先做上证指数分析
                     continue
+                # 调用数据源 API 获取指定指数的日K数据，起始日期从 2020-01-01 开始
                 df_SpecIndex = self.__pro.index_daily(ts_code=code, start_date='20200101')
                 df_SpecIndex = df_SpecIndex.reset_index()
                 df_SpecIndex = NounsEng2Chn().converseEng2Chn(df_SpecIndex, NounsEng2Chn.mDataSpecIndexTradingDaily)
